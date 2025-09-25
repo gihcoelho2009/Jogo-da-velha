@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <title>Jogo da Velha - Princesinha</title>
+    <style>
+        /* Importa fontes para um estilo mais delicado */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;700&display=swap');
+
+        body {
+            background-color: #fce4ec; /* Rosa claro, cor de fundo suave */
+            color: #4a148c; /* Roxo escuro para o texto */
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4em;
+            color: #880e4f; /* Rosa escuro, como uma joia */
+            text-shadow: 2px 2px 4px #e91e63, 
+                         -2px -2px 4px #fff; /* Sombras que dão um efeito de brilho */
+        }
+
+        .tabuleiro {
+            background: #e1bee7; /* Lilás claro, cor de castelo */
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 8px; /* Aumentei o espaço para parecer mais elegante */
+            margin: 20px auto;
+            width: max-content;
+            border: 5px solid #d81b60; /* Borda rosa forte, de contorno */
+            border-radius: 15px; /* Bordas arredondadas para um toque suave */
+            box-shadow: 0 0 20px rgba(136, 14, 79, 0.4); /* Sombra que simula um brilho rosado */
+        }
+
+        .casa {
+            background: #f8bbd0; /* Rosa médio, cor de flor */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            cursor: pointer;
+            color: #d81b60; /* Rosa escuro para o X e O */
+            border-radius: 10px; /* Bordas arredondadas nas casas */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .casa:hover {
+            background-color: #f48fb1; /* Rosa um pouco mais escuro ao passar o mouse */
+            transform: scale(1.05); /* Pequeno efeito de zoom para chamar a atenção */
+        }
+
+        .casa.X {
+            color: #880e4f; /* Roxo vibrante para o jogador X */
+            text-shadow: 2px 2px 4px #e91e63;
+        }
+
+        .casa.O {
+            color: #00bcd4; /* Azul-claro, como um diamante */
+            text-shadow: 2px 2px 4px #e0f7fa;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jogo da Velha</h1>
+    <div class="tabuleiro">
+        <div class="casa"></div>
+        <div class="casa"></div>
+        <div class="casa"></div>
+        <div class="casa"></div>
+        <div class="casa"></div>
+        <div class="casa"></div>
+        <div class="casa"></div>
+        <div class="casa"></div>
+        <div class="casa"></div>
+    </div>
+    <script>
+        const casas = document.querySelectorAll(".casa");
+        let jogador = "X";
+
+        const combinacoes = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+        
+        casas.forEach(casa => {
+            casa.addEventListener('click', clique);
+        });
+
+        function clique(event) {
+            const casa = event.target;
+            if (casa.textContent === "") {
+                casa.textContent = jogador;
+                casa.classList.add(jogador); 
+                
+                jogador = (jogador === "X") ? "O" : "X";
+            }
+        }
+    </script>
+</body>
+</html>
