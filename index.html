@@ -94,8 +94,25 @@
             if (casa.textContent === "") {
                 casa.textContent = jogador;
                 casa.classList.add(jogador); 
+            if(checarVencedor()){
+               alert("Parabens!!! Ojogador" + jogador +"venceu!!!")
+            }else {
+             jogador = (jogador === "X") ? "O" : "X";   
+            }                
                 
-                jogador = (jogador === "X") ? "O" : "X";
+            }
+        }
+
+        function checarVencedor() {
+            for(lete i = 0: <combinacoes.length; i++) {
+                const [a,b,c] = combinacoes [i];
+                if(casas[a].textContent === jogador &&
+                   casas[b].textContent === jogador &&
+                   casas[c].textContent === jogador ){
+                    return true;
+                }else {
+                    return false;
+                }
             }
         }
     </script>
