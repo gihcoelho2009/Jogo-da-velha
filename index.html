@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
     <title>Jogo da Velha - Princesinha</title>
     <style>
-        /* Importa fontes para um estilo mais delicado */
+        /* Fontes estilosas */
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;700&display=swap');
 
         body {
-            background-color: #fce4ec; /* Rosa claro, cor de fundo suave */
-            color: #4a148c; /* Roxo escuro para o texto */
+            background-color: #fce4ec;
+            color: #4a148c;
             font-family: 'Playfair Display', serif;
             text-align: center;
         }
@@ -16,54 +17,80 @@
         h1 {
             font-family: 'Dancing Script', cursive;
             font-size: 4em;
-            color: #880e4f; /* Rosa escuro, como uma joia */
-            text-shadow: 2px 2px 4px #e91e63, 
-                         -2px -2px 4px #fff; /* Sombras que dão um efeito de brilho */
+            color: #880e4f;
+            text-shadow: 2px 2px 4px #e91e63, -2px -2px 4px #fff;
+        }
+
+        #placar {
+            font-size: 1.5em;
+            margin-top: 10px;
+            color: #4a148c;
+        }
+
+        button {
+            font-size: 1em;
+            padding: 10px 20px;
+            background-color: #f06292;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ec407a;
         }
 
         .tabuleiro {
-            background: #e1bee7; /* Lilás claro, cor de castelo */
+            background: #e1bee7;
             display: grid;
             grid-template-columns: repeat(3, 100px);
             grid-template-rows: repeat(3, 100px);
-            gap: 8px; /* Aumentei o espaço para parecer mais elegante */
+            gap: 8px;
             margin: 20px auto;
             width: max-content;
-            border: 5px solid #d81b60; /* Borda rosa forte, de contorno */
-            border-radius: 15px; /* Bordas arredondadas para um toque suave */
-            box-shadow: 0 0 20px rgba(136, 14, 79, 0.4); /* Sombra que simula um brilho rosado */
+            border: 5px solid #d81b60;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(136, 14, 79, 0.4);
         }
 
         .casa {
-            background: #f8bbd0; /* Rosa médio, cor de flor */
+            background: #f8bbd0;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 4rem;
             cursor: pointer;
-            color: #d81b60; /* Rosa escuro para o X e O */
-            border-radius: 10px; /* Bordas arredondadas nas casas */
+            color: #d81b60;
+            border-radius: 10px;
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .casa:hover {
-            background-color: #f48fb1; /* Rosa um pouco mais escuro ao passar o mouse */
-            transform: scale(1.05); /* Pequeno efeito de zoom para chamar a atenção */
+            background-color: #f48fb1;
+            transform: scale(1.05);
         }
 
         .casa.X {
-            color: #880e4f; /* Roxo vibrante para o jogador X */
+            color: #880e4f;
             text-shadow: 2px 2px 4px #e91e63;
         }
 
         .casa.O {
-            color: #00bcd4; /* Azul-claro, como um diamante */
+            color: #00bcd4;
             text-shadow: 2px 2px 4px #e0f7fa;
         }
     </style>
 </head>
 <body>
     <h1>Jogo da Velha</h1>
+
+    <div id="placar">
+        <p>👑 X: <span id="placarX">0</span> | 💎 O: <span id="placarO">0</span></p>
+    </div>
+
     <div class="tabuleiro">
         <div class="casa"></div>
         <div class="casa"></div>
@@ -75,45 +102,78 @@
         <div class="casa"></div>
         <div class="casa"></div>
     </div>
+
+    <button onclick="reiniciarJogo()">🔄 Reiniciar Jogo</button>
+
     <script>
         const casas = document.querySelectorAll(".casa");
         let jogador = "X";
+        let placarX = 0;
+        let placarO = 0;
 
         const combinacoes = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],
             [0, 3, 6], [1, 4, 7], [2, 5, 8],
             [0, 4, 8], [2, 4, 6]
         ];
-        
+
         casas.forEach(casa => {
-            casa.addEventListener('click', clique);
+            casa.addEventListener("click", clique);
         });
 
         function clique(event) {
             const casa = event.target;
             if (casa.textContent === "") {
                 casa.textContent = jogador;
-                casa.classList.add(jogador); 
-            if(checarVencedor()){
-               alert("Parabens!!! Ojogador" + jogador +"venceu!!!")
-            }else {
-             jogador = (jogador === "X") ? "O" : "X";   
-            }                
-                
+                casa.classList.add(jogador);
+
+                if (checarVencedor()) {
+                    alert("Parabéns! O jogador " + jogador + " venceu!");
+                    if (jogador === "X") {
+                        placarX++;
+                    } else {
+                        placarO++;
+                    }
+                    atualizarPlacar();
+                    desativarCasas();
+                } else {
+                    jogador = (jogador === "X") ? "O" : "X";
+                }
             }
         }
 
         function checarVencedor() {
-            for(let i = 0;i <combinacoes.length; i++) {
-                const [a,b,c] = combinacoes [i];
-                if(casas[a].textContent === jogador &&
-                   casas[b].textContent === jogador &&
-                   casas[c].textContent === jogador ){
+            for (let i = 0; i < combinacoes.length; i++) {
+                const [a, b, c] = combinacoes[i];
+                if (
+                    casas[a].textContent === jogador &&
+                    casas[b].textContent === jogador &&
+                    casas[c].textContent === jogador
+                ) {
                     return true;
-                }else {
-                    return false;
                 }
             }
+            return false;
+        }
+
+        function atualizarPlacar() {
+            document.getElementById("placarX").textContent = placarX;
+            document.getElementById("placarO").textContent = placarO;
+        }
+
+        function reiniciarJogo() {
+            casas.forEach(casa => {
+                casa.textContent = "";
+                casa.classList.remove("X", "O");
+                casa.addEventListener("click", clique);
+            });
+            jogador = "X";
+        }
+
+        function desativarCasas() {
+            casas.forEach(casa => {
+                casa.removeEventListener("click", clique);
+            });
         }
     </script>
 </body>
