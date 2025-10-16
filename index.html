@@ -27,6 +27,11 @@
             color: #4a148c;
         }
 
+        /* Agrupa os botões em uma linha */
+        #botoes-container {
+            margin-top: 15px;
+        }
+
         button {
             font-size: 1em;
             padding: 10px 20px;
@@ -34,7 +39,7 @@
             border: none;
             border-radius: 10px;
             color: white;
-            margin-top: 10px;
+            margin: 0 5px; /* Adicionado margem para separar os botões */
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -42,8 +47,18 @@
         button:hover {
             background-color: #ec407a;
         }
+        
+        /* Estilo específico para o novo botão de placar */
+        #reset-placar-btn {
+            background-color: #9c27b0; /* Roxo mais escuro para diferenciar */
+        }
+        
+        #reset-placar-btn:hover {
+            background-color: #7b1fa2;
+        }
 
-        .tabuleiro-container { /* Novo container para posicionar o overlay */
+
+        .tabuleiro-container {
             position: relative;
             width: max-content;
             margin: 20px auto;
@@ -95,10 +110,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            display: none; /* Começa escondida */
+            display: none; 
             align-items: center;
             justify-content: center;
-            background-color: rgba(252, 228, 236, 0.95); /* Fundo semi-transparente rosa claro */
+            background-color: rgba(252, 228, 236, 0.95);
             border-radius: 15px;
             z-index: 10;
             font-family: 'Dancing Script', cursive;
@@ -112,7 +127,6 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
     </style>
 </head>
 <body>
@@ -137,12 +151,19 @@
             <div class="casa"></div>
         </div>
     </div>
-
-    <button onclick="reiniciarJogo()">🔄 Reiniciar Jogo</button>
+    
+    <div id="botoes-container">
+        <button id="reset-placar-btn" onclick="reiniciarPlacar()">🏆 Zerar Placar</button>
+        
+        <button onclick="reiniciarJogo()">🔄 Reiniciar Jogo</button>
+    </div>
 
     <script>
         const casas = document.querySelectorAll(".casa");
         const mensagemResultado = document.getElementById("mensagem-resultado");
+        const placarXSpan = document.getElementById("placarX");
+        const placarOSpan = document.getElementById("placarO");
+        
         let jogador = "X";
         let placarX = 0;
         let placarO = 0;
@@ -166,7 +187,6 @@
                 jogadas++; 
 
                 if (checarVencedor()) {
-                    // MENSAGEM GRANDE DE VITÓRIA (sem alert)
                     mostrarMensagem("🎉 Jogador " + jogador + " VENCEU! 👑"); 
                     if (jogador === "X") {
                         placarX++;
@@ -176,7 +196,6 @@
                     atualizarPlacar();
                     desativarCasas();
                 } else if (jogadas === 9) { 
-                    // MENSAGEM GRANDE DE EMPATE (sem alert)
                     mostrarMensagem("🟰 EMPATE! 🤝"); 
                     desativarCasas();
                 } else {
@@ -200,24 +219,13 @@
         }
 
         function atualizarPlacar() {
-            document.getElementById("placarX").textContent = placarX;
-            document.getElementById("placarO").textContent = placarO;
+            placarXSpan.textContent = placarX;
+            placarOSpan.textContent = placarO;
         }
 
         function mostrarMensagem(texto) {
             mensagemResultado.textContent = texto;
-            mensagemResultado.style.display = 'flex'; // Torna a mensagem grande visível
-        }
-
-        function reiniciarJogo() {
-            casas.forEach(casa => {
-                casa.textContent = "";
-                casa.classList.remove("X", "O");
-                casa.addEventListener("click", clique);
-            });
-            mensagemResultado.style.display = 'none'; // Esconde a mensagem grande
-            jogador = "X";
-            jogadas = 0; 
+            mensagemResultado.style.display = 'flex'; 
         }
 
         function desativarCasas() {
@@ -225,8 +233,20 @@
                 casa.removeEventListener("click", clique);
             });
         }
-    </script>
-</body>
-</html>
-</body>
-</html>
+        
+        // --- NOVA FUNÇÃO PARA REINICIAR PLACAR ---
+        function reiniciarPlacar() {
+            placarX = 0;
+            placarO = 0;
+            atualizarPlacar();
+            // Mantém o jogo atual, mas se ele estiver encerrado,
+            // podemos garantir que ele volte ao estado inicial (tabuleiro limpo)
+            // se o placar for zerado.
+            reiniciarJogo(); 
+        }
+
+        // FUNÇÃO EXISTENTE PARA REINICIAR O JOGO
+        function reiniciarJogo() {
+            casas.forEach(casa => {
+                casa.textContent = "";
+                casa.classList.remove
