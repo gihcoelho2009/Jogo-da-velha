@@ -88,7 +88,7 @@
             text-shadow: 2px 2px 4px #e0f7fa;
         }
 
-        /* --- Novo CSS para a Mensagem de Resultado --- */
+        /* --- CSS para a Mensagem de Resultado (Grande) --- */
         #mensagem-resultado {
             position: absolute;
             top: 0;
@@ -142,11 +142,11 @@
 
     <script>
         const casas = document.querySelectorAll(".casa");
-        const mensagemResultado = document.getElementById("mensagem-resultado"); // Referência à nova div
+        const mensagemResultado = document.getElementById("mensagem-resultado");
         let jogador = "X";
         let placarX = 0;
         let placarO = 0;
-        let jogadas = 0; // Contador de jogadas para verificar empate
+        let jogadas = 0; 
 
         const combinacoes = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -163,10 +163,10 @@
             if (casa.textContent === "") {
                 casa.textContent = jogador;
                 casa.classList.add(jogador);
-                jogadas++; // Incrementa a jogada
+                jogadas++; 
 
                 if (checarVencedor()) {
-                    // Exibe a mensagem grande de vitória
+                    // MENSAGEM GRANDE DE VITÓRIA (sem alert)
                     mostrarMensagem("🎉 Jogador " + jogador + " VENCEU! 👑"); 
                     if (jogador === "X") {
                         placarX++;
@@ -175,12 +175,11 @@
                     }
                     atualizarPlacar();
                     desativarCasas();
-                } else if (jogadas === 9) { // Verifica se houve empate (todas as 9 casas preenchidas)
-                    // Exibe a mensagem grande de empate
+                } else if (jogadas === 9) { 
+                    // MENSAGEM GRANDE DE EMPATE (sem alert)
                     mostrarMensagem("🟰 EMPATE! 🤝"); 
                     desativarCasas();
                 } else {
-                    // Continua o jogo
                     jogador = (jogador === "X") ? "O" : "X";
                 }
             }
@@ -207,7 +206,7 @@
 
         function mostrarMensagem(texto) {
             mensagemResultado.textContent = texto;
-            mensagemResultado.style.display = 'flex'; // Torna a mensagem visível
+            mensagemResultado.style.display = 'flex'; // Torna a mensagem grande visível
         }
 
         function reiniciarJogo() {
@@ -216,9 +215,9 @@
                 casa.classList.remove("X", "O");
                 casa.addEventListener("click", clique);
             });
-            mensagemResultado.style.display = 'none'; // Esconde a mensagem
+            mensagemResultado.style.display = 'none'; // Esconde a mensagem grande
             jogador = "X";
-            jogadas = 0; // Zera o contador de jogadas
+            jogadas = 0; 
         }
 
         function desativarCasas() {
@@ -227,5 +226,7 @@
             });
         }
     </script>
+</body>
+</html>
 </body>
 </html>
