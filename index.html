@@ -39,7 +39,7 @@
             border: none;
             border-radius: 10px;
             color: white;
-            margin: 0 5px; /* Adicionado margem para separar os botões */
+            margin: 0 8px; /* Adicionado margem para separar os botões */
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -234,19 +234,26 @@
             });
         }
         
-        // --- NOVA FUNÇÃO PARA REINICIAR PLACAR ---
+        // FUNÇÃO PARA ZERAR APENAS O PLACAR
         function reiniciarPlacar() {
             placarX = 0;
             placarO = 0;
             atualizarPlacar();
-            // Mantém o jogo atual, mas se ele estiver encerrado,
-            // podemos garantir que ele volte ao estado inicial (tabuleiro limpo)
-            // se o placar for zerado.
+            // Também reinicia o jogo para que um novo possa começar imediatamente
             reiniciarJogo(); 
         }
 
-        // FUNÇÃO EXISTENTE PARA REINICIAR O JOGO
+        // FUNÇÃO PARA REINICIAR A PARTIDA/JOGO
         function reiniciarJogo() {
             casas.forEach(casa => {
                 casa.textContent = "";
-                casa.classList.remove
+                casa.classList.remove("X", "O");
+                casa.addEventListener("click", clique);
+            });
+            mensagemResultado.style.display = 'none'; 
+            jogador = "X";
+            jogadas = 0; 
+        }
+    </script>
+</body>
+</html>
