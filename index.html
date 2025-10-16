@@ -43,13 +43,18 @@
             background-color: #ec407a;
         }
 
+        .tabuleiro-container { /* Novo container para posicionar o overlay */
+            position: relative;
+            width: max-content;
+            margin: 20px auto;
+        }
+
         .tabuleiro {
             background: #e1bee7;
             display: grid;
             grid-template-columns: repeat(3, 100px);
             grid-template-rows: repeat(3, 100px);
             gap: 8px;
-            margin: 20px auto;
             width: max-content;
             border: 5px solid #d81b60;
             border-radius: 15px;
@@ -82,6 +87,32 @@
             color: #00bcd4;
             text-shadow: 2px 2px 4px #e0f7fa;
         }
+
+        /* --- Novo CSS para a Mensagem de Resultado --- */
+        #mensagem-resultado {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none; /* Começa escondida */
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(252, 228, 236, 0.95); /* Fundo semi-transparente rosa claro */
+            border-radius: 15px;
+            z-index: 10;
+            font-family: 'Dancing Script', cursive;
+            font-size: 5em;
+            color: #d81b60;
+            text-shadow: 3px 3px 6px #e91e63, -3px -3px 6px #fff;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
     </style>
 </head>
 <body>
@@ -91,25 +122,31 @@
         <p>👑 X: <span id="placarX">0</span> | 💎 O: <span id="placarO">0</span></p>
     </div>
 
-    <div class="tabuleiro">
-        <div class="casa"></div>
-        <div class="casa"></div>
-        <div class="casa"></div>
-        <div class="casa"></div>
-        <div class="casa"></div>
-        <div class="casa"></div>
-        <div class="casa"></div>
-        <div class="casa"></div>
-        <div class="casa"></div>
+    <div class="tabuleiro-container">
+        <div id="mensagem-resultado"></div> 
+
+        <div class="tabuleiro">
+            <div class="casa"></div>
+            <div class="casa"></div>
+            <div class="casa"></div>
+            <div class="casa"></div>
+            <div class="casa"></div>
+            <div class="casa"></div>
+            <div class="casa"></div>
+            <div class="casa"></div>
+            <div class="casa"></div>
+        </div>
     </div>
 
     <button onclick="reiniciarJogo()">🔄 Reiniciar Jogo</button>
 
     <script>
         const casas = document.querySelectorAll(".casa");
+        const mensagemResultado = document.getElementById("mensagem-resultado"); // Referência à nova div
         let jogador = "X";
         let placarX = 0;
         let placarO = 0;
+        let jogadas = 0; // Contador de jogadas para verificar empate
 
         const combinacoes = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -126,9 +163,11 @@
             if (casa.textContent === "") {
                 casa.textContent = jogador;
                 casa.classList.add(jogador);
+                jogadas++; // Incrementa a jogada
 
                 if (checarVencedor()) {
-                    alert("Parabéns! O jogador " + jogador + " venceu!");
+                    // Exibe a mensagem grande de vitória
+                    mostrarMensagem("🎉 Jogador " + jogador + " VENCEU! 👑"); 
                     if (jogador === "X") {
                         placarX++;
                     } else {
@@ -136,7 +175,12 @@
                     }
                     atualizarPlacar();
                     desativarCasas();
+                } else if (jogadas === 9) { // Verifica se houve empate (todas as 9 casas preenchidas)
+                    // Exibe a mensagem grande de empate
+                    mostrarMensagem("🟰 EMPATE! 🤝"); 
+                    desativarCasas();
                 } else {
+                    // Continua o jogo
                     jogador = (jogador === "X") ? "O" : "X";
                 }
             }
@@ -161,13 +205,20 @@
             document.getElementById("placarO").textContent = placarO;
         }
 
+        function mostrarMensagem(texto) {
+            mensagemResultado.textContent = texto;
+            mensagemResultado.style.display = 'flex'; // Torna a mensagem visível
+        }
+
         function reiniciarJogo() {
             casas.forEach(casa => {
                 casa.textContent = "";
                 casa.classList.remove("X", "O");
                 casa.addEventListener("click", clique);
             });
+            mensagemResultado.style.display = 'none'; // Esconde a mensagem
             jogador = "X";
+            jogadas = 0; // Zera o contador de jogadas
         }
 
         function desativarCasas() {
